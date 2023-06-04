@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
 
-function App() {
+export default function App(){
+  const [weatherData, setWeatherData] = useState([]);
+
+  useEffect(() => {
+    const url = "http://localhost:8080/api/weather";
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log(json);
+        setWeatherData(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Add closing curly brace for the useEffect hook
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Weather Data</h1>
+      {weatherData.map((data) => (
+        <div key={data.id_stacji}>
+          <p>Station: {data.stacja}</p>
+          <p>Temperature: {data.temperatura}</p>
+          <p>Wind Speed: {data.predkosc_wiatru}</p>
+          {/* Render other data fields */}
+          <hr />
+        </div>
+      ))}
     </div>
   );
 }
-
-export default App;
